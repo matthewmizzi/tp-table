@@ -1,10 +1,7 @@
-let test1 = [43,35,80,123,12345,44,8,5,24,3,22,35];
-let test2 = [4];
-
 let printBorder = (array, max) => {
 
     //just print the border.  If the index is 0 it means that an extra + needs to be added at the start
-    return array.map((number,index) => index == 0 ? `+${'-'.repeat(max)}+` : `${'-'.repeat(max)}+`)
+    return array.map((number,index) => index == 0 ? `+${'-'.repeat(max)}+` : `${'-'.repeat(max)}+`).join("");
 }
 
 let printRow = (array, max) => {
@@ -15,7 +12,7 @@ let printRow = (array, max) => {
         //calculate amount of spaces needed for the current tab
         const difference = max - number.toString().length;
         return index == 0 ? `|${' '.repeat(difference) + number}|` : `${' '.repeat(difference) + number}|`;
-    })
+    }).join("");
 }
 
 let setupRows = (array, rowNumber) => {
@@ -35,6 +32,13 @@ let setupRows = (array, rowNumber) => {
     }
 }
 
+let printCompleteRow = (row, max, upperBorder) => {
+    let printedRow = "";
+    printedRow += upperBorder ? `${printBorder(row,max)}\n` : "";
+    printedRow += `${printRow(row,max)}\n`;
+    printedRow += `${printBorder(row,max)}\n`;
+    return printedRow;
+}
 
 let solution = (array, rowNumber=1) => {
 
@@ -44,14 +48,14 @@ let solution = (array, rowNumber=1) => {
     //split the array into multiple array per row
     const splitArray = setupRows(array, rowNumber);
 
-    let table = "";
-
-    table += `${printBorder(array, max).join("")}\n`;
-    table += `${printRow(array, max).join("")}\n`;
+    //build the table.  If the index is 0 it means that an extra header needs to be added at the start
+    const table = splitArray.map((row, index) => printCompleteRow(row, max, index == 0)).join("");
     console.log(table);
-
-    debugger;
 }
 
-solution(test1, 12);
-solution(test2, 1);
+//testing
+solution([43,35,80,123,12345,44,8,5], 10);
+solution([43,35,80,123,12345,44,8,5,24,3], 4);
+solution([43,35,80,123,12345,44,8,5,24,3,22,35], 4);
+solution([4], 1);
+solution([1234, 5000, 10, 9, 1000000000], 1000000000);
